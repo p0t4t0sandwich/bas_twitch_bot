@@ -11,7 +11,7 @@ from twitchio.ext import commands
 import os
 import bot_library as b
 
-path = "/bas_twitch_bot/"
+path = "/home/dylan/code/projects/bas_network/bas_twitch_bot/code/"#/bas_twitch_bot/"
 
 class Bot(commands.Bot):
 
@@ -69,6 +69,28 @@ class Bot(commands.Bot):
             statement, status = b.link_account("twitch", author, user_id, parsed[0], parsed[1])
         else:
             statement, status = b.link_account("twitch", author, user_id, parsed[0], parsed[0])
+
+        # Log the data
+        self.log(channel, self.nick, statement)
+
+        # Send the message
+        await ctx.send(statement)
+
+    # The !bal command and logging logic.
+    @commands.command()
+    async def bal(self, ctx: commands.Context):
+
+        # Init variables
+        channel = ctx.channel.name
+        author = ctx.author.name
+        user_id = ctx.author.id
+        content = ctx.message.content
+
+        # Log the data
+        self.log(channel, author, content)
+
+        # Bal and response logic
+        statement, status = b.bal("twitch", author)
 
         # Log the data
         self.log(channel, self.nick, statement)
