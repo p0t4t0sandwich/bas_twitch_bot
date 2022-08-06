@@ -1,0 +1,16 @@
+---
+version: "3.8"
+services:
+  bas_twitch_bot:
+    image: p0t4t0sandwich/bas_twitch_bot:latest
+    container_name: bas_twitch_bot
+    environment:
+      - TZ=UTC
+      - TWITCH_BOT_TOKEN=                   # The Bot Token of the Twitch bot
+      - MYSQL_USER=                         # MySQL User
+      - MYSQL_PASSWORD=                     # MySQL Password
+      - MYSQL_HOST=                         # MySQL Host
+      - MYSQL_DATABASE=                     # MySQL Database
+    volumes:
+      - /PATH-TO-FOLDER:/bas_twitch_bot     # Path to the file storage of the bot.
+    restart: unless-stopped
