@@ -11,7 +11,7 @@ from twitchio.ext import commands
 import os
 import bot_library as b
 
-path = "/home/dylan/code/projects/bas_network/bas_twitch_bot/code/"#/bas_twitch_bot/"
+path = "/bas_twitch_bot/"
 
 class Bot(commands.Bot):
 
@@ -19,7 +19,7 @@ class Bot(commands.Bot):
         super().__init__(
             token = os.getenv("TWITCH_BOT_TOKEN"),
             prefix = os.getenv("PREFIX"),
-            initial_channels = eval(os.getenv("INITIAL_CHANNELS"))
+            initial_channels = [i for i in os.getenv("INITIAL_CHANNELS").split(", ")]
         )
 
     # Logging function to decrease clutter.
@@ -42,7 +42,7 @@ class Bot(commands.Bot):
         self.log(channel, author, content)
 
         # Response
-        statement = "BAS Bot: !help, !link, !ip, !dc"
+        statement = "BAS Bot: !help, !link, !ip, !dc, !bal, !playtime"
 
         # Log the data
         self.log(channel, self.nick, statement)
@@ -76,6 +76,27 @@ class Bot(commands.Bot):
         # Send the message
         await ctx.send(statement)
 
+    # The !playtime command and logging logic.
+    @commands.command()
+    async def playtime(self, ctx: commands.Context):
+
+        # Init variables
+        channel = ctx.channel.name
+        author = ctx.author.name
+        content = ctx.message.content
+
+        # Log the data
+        self.log(channel, author, content)
+
+        # Playtime and response logic
+        statement, status = b.playtime("twitch", author)
+
+        # Log the data
+        self.log(channel, self.nick, statement.split("\n")[0])
+
+        # Send the message
+        await ctx.send(statement.split("\n")[0])
+
     # The !bal command and logging logic.
     @commands.command()
     async def bal(self, ctx: commands.Context):
@@ -83,7 +104,6 @@ class Bot(commands.Bot):
         # Init variables
         channel = ctx.channel.name
         author = ctx.author.name
-        user_id = ctx.author.id
         content = ctx.message.content
 
         # Log the data
